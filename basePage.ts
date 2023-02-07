@@ -33,9 +33,26 @@ export class BasePage {
         await this.driver.wait(until.elementIsVisible(element))
         return element;
     }
+
     async click(elementBy: By): Promise<void> {
         return(await this.getElement(elementBy)).click();
     }
+
+    async clickSpecial(elementBy: By): Promise<void> {
+        try {
+            console.log(`clickSpecial start by:${elementBy.toString()}`)
+            const targetElement = await this.getElement(elementBy)
+            console.log(`clickSpecial element found`)
+            await this.moveToElementAndWiggle(targetElement, 250)
+            console.log(`clickSpecial did a little dance`)
+            return this.click(elementBy)
+        } catch (err) {
+            console.log(`clickSpecial error thrown by:${elementBy.toString()}`)
+            console.error(err);
+            throw err;
+        }
+    }
+
     async setInput(elementBy:By, keys: any): Promise<void> {
         let input = await this.getElement(elementBy);
         await input.clear();
@@ -95,6 +112,32 @@ export class BasePage {
         actions = this.actionWiggle(actions, originElement, moveDurationMs);
         actions.release(Button.LEFT)
         return this.actionWiggle(actions, originElement, moveDurationMs)        
+    }
+
+    async doPressHoldMoveRelease(fromElement: WebElement, toElement: WebElement): Promise<void> {
+        //required importing "Actions" 
+        // return this.driver.actions().dragAndDrop(fromElement, toElement).perform()
+        console.log(`doPressHoldMoveRelease phase=Start`)
+        const moveDuration = 50
+        await this.driver.actions().clear()
+        let actions = this.driver.actions()
+
+        actions = this.actionPressWiggle(actions, fromElement, moveDuration)
+        actions = this.actionReleaseWiggle(actions, toElement, moveDuration)
+
+        const actionPromise:Promise<void> = actions.perform();
+        console.log(`doPressHoldMoveRelease phase=Done`)
+        return await actionPromise
+    }
+
+    async moveToElementAndWiggle(toElement: WebElement, moveDuration = 50): Promise<void> {
+        console.log(`moveToElementAndWiggle phase=Start`)
+        await this.driver.actions().clear()
+        let actions = this.driver.actions()
+        actions = this.actionPressWiggle(actions, toElement, moveDuration)
+        const actionPromise:Promise<void> = actions.perform();
+        console.log(`moveToElementAndWiggle phase=Done`)
+        return await actionPromise
     }
 
     // Should be exported to personal basePage - add mouse icon to view what it's doing while running tests

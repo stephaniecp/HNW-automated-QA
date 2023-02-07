@@ -6,8 +6,8 @@ const gamerDaysPageObject = new GamerDaysPageObject()
 
 beforeAll(async () => {
   await gamerDaysPageObject.navigate()
-  await gamerDaysPageObject.showMouseMovement()
-  await gamerDaysPageObject.driver.manage().window().maximize()
+  //await gamerDaysPageObject.showMouseMovement()
+  //await gamerDaysPageObject.driver.manage().window().maximize()
 })
 
 describe("Event end: confirming page status", () => {
@@ -18,10 +18,19 @@ describe("Event end: confirming page status", () => {
 
 })
 
-describe("Verify link to Twitch", () => {
+describe("Verify link to Twitch + return to original", () => {
     test("US: CTA Link to Twitch is working)", async() => {
-        await (gamerDaysPageObject.byCTAtoViewTwitch)
-        console.log ("US Click CTA to go to Twitch")
+        await gamerDaysPageObject.driver.sleep(500);
+        // console.log ("Before Logo click")
+        // await gamerDaysPageObject.click(gamerDaysPageObject.byTopLeftIntelLogo)
+        // console.log ("After Logo click")
+
+        await gamerDaysPageObject.clickSpecial(gamerDaysPageObject.byCTAtoViewTwitch)
+        console.log ("US: Click CTA to go to Twitch")
+        await gamerDaysPageObject.driver.sleep(3000);
+        await gamerDaysPageObject.getElement(gamerDaysPageObject.byTwitchUpperLeftLogo)
+        console.log ("US: Has located the Twitch logo visible on the upper left when page loads successfully")
+        await gamerDaysPageObject.driver.navigate().back()
     }) 
 })
 
@@ -29,3 +38,4 @@ afterAll(async () => {
     await gamerDaysPageObject.driver.quit()
     console.log("AFTER ALL - Browser quit")
 });
+
