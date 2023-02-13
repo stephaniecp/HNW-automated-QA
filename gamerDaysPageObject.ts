@@ -18,9 +18,27 @@ export class GamerDaysPageObject extends BasePage {
     }
 
     // Custom Methods Below
-    // async myMethod() {
-    //     return await (this.)
-    // }
+    async tabSwitchBack() {
+        let myTabs = await this.driver.getAllWindowHandles()
+        await this.driver.switchTo().window(myTabs[1]);
+        await this.driver.sleep(1000);
+        await this.driver.close()
+        await this.driver.switchTo().window(myTabs[0])
+    } 
+
+    // Search and validate results
+    searchField: By = By.xpath("bySearchNavBar")
+    results: By = By.css("[class='coveo-result-list-container coveo-list-layout-container']")
+    async searchAndValidateResults(searchTerm: string) {
+        await this.click(this.searchField)
+        console.log("1.1 Clicked search field")
+        return this.setInput(this.searchField, `${searchTerm}\n`) // might need naother id as seen in https://github.com/stephaniecp/steph-solo-project/blob/main/mainPageObject.ts
+        console.log("Typed search query")
+    }
+    async getResults() {
+        return this.getText(this.results)
+        console.log("1.2 Pulled results")
+    }
 
 
 } // End of export
