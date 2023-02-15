@@ -1,7 +1,20 @@
 import {Builder, By, Capabilities, until, WebDriver, WebElement, Actions, Button} from "selenium-webdriver";
 import { GamerDaysPageObject } from "./gamerDaysPageObject";
+import { FtfMainPageObject } from "./FtfMainPageObject";
 const fs= require('fs')
-const chromedriver = require("chromedriver")
+//const chromedriver = require("chromedriver")
+import { CustomConsole, LogType, LogMessage } from '@jest/console';
+
+function simpleFormatter(type: LogType, message: LogMessage): string {
+    const TITLE_INDENT = '    ';
+    const CONSOLE_INDENT = TITLE_INDENT + '  ';
+
+    return message
+        .split(/\n/)
+        .map(line => CONSOLE_INDENT + line)
+        .join('\n');
+}
+global.console = new CustomConsole(process.stdout, process.stderr, simpleFormatter);
 
 interface Options {
     driver?: WebDriver;
@@ -16,6 +29,7 @@ export class BasePage {
         if (options && options.driver) this.driver = options.driver;
         else
         this.driver = new Builder().withCapabilities(Capabilities.chrome()).build()
+        //this.driver = new Builder().withCapabilities(Capabilities.firefox()).build()
         if(options && options.url) this.url = options.url
     }
     async navigate(url?: string): Promise<void> {
@@ -27,10 +41,16 @@ export class BasePage {
         )
     }
 
-    async getElement(elementBy: By): Promise<WebElement> {
-        await this.driver.wait(until.elementLocated(elementBy));
-        let element = await this.driver.findElement(elementBy);
-        await this.driver.wait(until.elementIsVisible(element))
+    async getElement(elementBy: By, debug:Boolean=false): Promise<WebElement> {
+        if (debug) console.log(`getElement phase=start by=${elementBy.toString()}`)
+        await this.driver.wait(until.elementLocated(elementBy))
+        if (debug) console.log(`getElement phase=elementLocated`)
+        let element = await this.driver.findElement(elementBy)
+        if (debug) console.log(`getElement phase=elementFound`)
+
+        //elementIsVisible appears to not work with some input fields, maybe checkboxes or labels
+        //await this.driver.wait(until.elementIsVisible(element))
+        //if (debug) console.log(`getElement phase=elementVisible`)
         return element;
     }
 
@@ -40,12 +60,33 @@ export class BasePage {
 
     async clickSpecial(elementBy: By): Promise<void> {
         try {
-            console.log(`clickSpecial start by:${elementBy.toString()}`)
-            const targetElement = await this.getElement(elementBy)
-            console.log(`clickSpecial element found`)
-            await this.moveToElementAndWiggle(targetElement, 250)
+            console.log(`clickSpecial phase=start by=${elementBy.toString()}`)
+            let targetElement = await this.getElement(elementBy, true) ;
+            try {
+                await targetElement.click()
+                console.log(`clickSpecial phase=normalClickWorked`)
+                return;
+            } catch (err) {
+                //we tried!!
+                console.log(`clickSpecial phase=fallingthroughtoJS by=${elementBy.toString()}`, err)
+            }
+
+            console.log(`clickSpecial element found by:${elementBy.toString()} isDisplayed:${await targetElement.isDisplayed()}`)
+            await this.describeElement(targetElement, elementBy)
+            await this.scrollIntoViewJs(targetElement)
+            console.log(`clickSpecial did a js scroll`)
+            await this.moveToElementAndWiggle(targetElement, 50)
             console.log(`clickSpecial did a little dance`)
-            return this.click(elementBy)
+
+            await this.describeElement(targetElement, elementBy)
+
+            try {
+                await this.clickJs(targetElement);
+                console.log("clickSpecial phase=clickJs")
+            } catch (err) {
+                await targetElement.click()
+                console.log("clickSpecial phase=clickNormal")
+            }
         } catch (err) {
             console.log(`clickSpecial error thrown by:${elementBy.toString()}`)
             console.error(err);
@@ -134,10 +175,20 @@ export class BasePage {
         console.log(`moveToElementAndWiggle phase=Start`)
         await this.driver.actions().clear()
         let actions = this.driver.actions()
-        actions = this.actionPressWiggle(actions, toElement, moveDuration)
+        actions = this.actionWiggle(actions, toElement, moveDuration)
         const actionPromise:Promise<void> = actions.perform();
         console.log(`moveToElementAndWiggle phase=Done`)
         return await actionPromise
+    }
+
+    async describeElement(toElement: WebElement, elementBy?: By) {
+        console.log("describeElement>>>>>>>>>>>>>>>>>")
+        console.log(await toElement.getAttribute("outerHTML"))
+        if (typeof elementBy !== 'undefined') {
+            console.log(`by:${elementBy.toString()}`)
+        }
+        console.log(`isElementInViewPort=${await this.isElementInViewportJs(toElement)}`)
+        console.log("describeElement<<<<<<<<<<<<<<<<<")
     }
 
     // Should be exported to personal basePage - add mouse icon to view what it's doing while running tests
@@ -160,11 +211,11 @@ export class BasePage {
             + 'ONcpr3PrXy9VfS473M/D7H+TLmrqsXtOGctvxvMv2oVNP+Av0uHbzbxyJaywyUjx8TlnPY2YxqkD'
             + 'dAAAAABJRU5ErkJggg==');
             seleniumFollowerImg.setAttribute('id', 'selenium_mouse_follower');
-            seleniumFollowerImg.setAttribute('style', 'position: absolute; z-index: 99999999999; pointer-events: none; left:0; top:0');
+            seleniumFollowerImg.setAttribute('style', 'position: absolute; z-index: 9999999; pointer-events: none; left:0; top:0; width: 17px; height: 20px;');
             document.body.appendChild(seleniumFollowerImg);
             document.onmousemove = function (e) {
-            document.getElementById('selenium_mouse_follower').style.left = e.pageX + 'px';
-            document.getElementById('selenium_mouse_follower').style.top = e.pageY + 'px';
+                document.getElementById('selenium_mouse_follower').style.left = e.pageX + 'px';
+                document.getElementById('selenium_mouse_follower').style.top = e.pageY + 'px';
             };
         };
         enableCursor();        
@@ -178,8 +229,47 @@ export class BasePage {
         return elements;
     } 
 
-    // async hoverOverElement(elementBy: By): Promise<WebElement[]>  {
-    // }
+    async isElementInViewportJs(toElement: WebElement): Promise<void> {
+        const jsCode = `
+            const el = arguments[0]
+            // Special bonus for those using jQuery
+            if (typeof jQuery === "function" && el instanceof jQuery) {
+                el = el[0];
+            }
+        
+            var rect = el.getBoundingClientRect();
+        
+            return (
+                rect.top >= 0 &&
+                rect.left >= 0 &&
+                rect.bottom <= (window.innerHeight || document.documentElement.clientHeight) && /* or $(window).height() */
+                rect.right <= (window.innerWidth || document.documentElement.clientWidth) /* or $(window).width() */
+            );
+        `
+        return await this.driver.executeScript(jsCode, toElement);
+    }
+
+    async scrollIntoViewJs(toElement: WebElement, delayMs = 500): Promise<void> {
+        await this.driver.executeScript("arguments[0].scrollIntoView(true);", toElement);
+        return await this.driver.sleep(delayMs);
+    }
+
+    async clickJs(toElement: WebElement): Promise<void> {
+        return await this.driver.executeScript("arguments[0].click()", toElement);
+    }
+
+    async alertJs(message: string): Promise<void> {
+        return await this.driver.executeScript("alert(arguments[0])", message)
+    }
+
+    async gentleBrowserClose(delayS:number=2){
+        if (delayS > 0) {
+            await this.alertJs(`Closing browser in ${delayS} seconds`)
+            await this.driver.sleep(delayS * 1000)
+        }
+        await this.driver.quit()
+    }
+
 
     // /**
     //  * Convenience method for drag and drop from the Actions API https://www.selenium.dev/documentation/webdriver/actions_api/
