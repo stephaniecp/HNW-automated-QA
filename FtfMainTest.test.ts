@@ -4,6 +4,15 @@ import { Actions } from 'selenium-webdriver'
 import {FtfMainPageObject} from './ftfMainPageObject'
 const ftfMainPageObject = new FtfMainPageObject()
 
+
+const filterCategoryInfo = new FilterCategoryInfo() // 2/16/23 added
+
+
+
+
+
+
+
 beforeAll(async () => {
   await ftfMainPageObject.navigate()
   await ftfMainPageObject.showMouseMovement()
@@ -31,6 +40,7 @@ describe("2- Can search based on address", () => {
 //         console.log ("(3) Done")
 //     }) 
 // })
+
 
 // afterAll(async () => {
 //     await ftfMainPageObject.gentleBrowserClose();

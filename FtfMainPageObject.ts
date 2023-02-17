@@ -1,6 +1,6 @@
 import {By, WebElement, until, Origin, Button} from 'selenium-webdriver'
 import {BasePage} from './basePage'
-const fs= require('fs')  //  (Built in from Node) Added for the screenshot/.txt tests per Unit 2.8 example https://github.com/MarohnHoward/qrpt9InClassExamples/blob/main/unit2.8/googleWBaseTest.test.ts
+const fs= require('fs') // File System 
 
 export class FtfMainPageObject extends BasePage {
 // Locators Below
@@ -13,15 +13,22 @@ export class FtfMainPageObject extends BasePage {
     WhatWedDoFormCheckParenting: By = By.xpath("//input[@id='interests-2']")
     WhatWedDoFormCheckNotifications: By = By.xpath("//input[@id='interests-3']")
     WhatWedDoFormCheckInformtion: By = By.xpath("//input[@id='interests-4']")
-// byHomeAddressField: By = By.xpath("//input[@placeholder='ENTER YOUR ADDRESS']")
-// byHomeAddressSearchCta: By = By.xpath("//input[@value='START YOUR SEARCH »']")
+    //Home
+    byHomeAddressField: By = By.xpath("//input[@placeholder='ENTER YOUR ADDRESS']")
+    byHomeAddressSearchCta: By = By.xpath("//input[@value='START YOUR SEARCH »']")
 
+    // Program search results page
+    bySearchResults1All: By = By.xpath("//input[@class='results']")
+    bySearchResult2Type: By = By.xpath("//input[@class='result']")
+    bySearchResult3TypeName: By = By.xpath("//input[@class='result-program-type']")
+    bySearchResults4TypeList: By = By.xpath("//input[@class='result-program']")
+    bySearchLeftCategory: By = By.xpath("//input[@class='term-name']")
+    bySearchLeftCategoryCount: By = By.xpath("//input[@class='term-count']")
+    bySearchLeftInvalid: By = By.xpath("//input[@class='invalid']")
 
 // Constructor
     constructor(){
         super({url:"https://www.firstthingsfirst.org/"})
-//         this.address = address;
-//         this.zipcode = zipcode;
     }
 
 // Custom Methods Below
@@ -30,12 +37,12 @@ export class FtfMainPageObject extends BasePage {
     async searchWithAddressFromHome(searchAddress: string) {
         console.log ("(2.0.0) Trying to initiate search (with address)")
         // let elementHomeAddressSearchCta = await this.getElement(this.homeAddressSearchCta) 
-        this.driver.sleep(500)
+        await this.driver.sleep(500)
         await this.clickSpecial(this.homeAddressField)
         await this.setInput(this.homeAddressField, `${searchAddress}\n`)
+        await this.driver.sleep(1500)
         console.log ("(2.0.3) Clicked to submit / initiate search")
     } 
-
 
     async navigateToStayUpToDateForm() {
         await this.clickSpecial(this.byNavAboutFtf)
@@ -50,5 +57,58 @@ export class FtfMainPageObject extends BasePage {
         await this.clickSpecial(this.WhatWedDoFormCheckNotifications)
         await this.clickSpecial(this.WhatWedDoFormCheckInformtion)
     }
+    
+
+
+
+
+
+
+    async getFilterCategoryInfo() {
+        // Left filter menu elements
+        let searchFilterCategoryName = await this.getElement(this.bySearchLeftCategory)
+        let searchFilterCategoryCount = await this.getElement(this.bySearchLeftCategoryCount)
+        let searchFilterInvalidState = await this.getElement(this.bySearchLeftInvalid)
+        // Right search results field elements
+        let searchResultsAll = await this.getElement(this.bySearchResults1All)
+        let searchResultTypeContainer = await this.getElement(this.bySearchResult2Type)
+        let searchResultTypeName = await this.getElement(this.bySearchResult3TypeName)
+        let searchResultTypeListItem = await this.getElement(this.bySearchResults4TypeList)
+
+        const nameMatchRegex = new RegExp("([^\(\)]+)");
+        const numberMatchRegex = new RegExp("(\\d+)"); 
+
+        const categoryTexts = [
+           return this.searchFilterCategoryName(this.nameMatchRegex)
+           return this.searchFilterCategoryCount(this.numberMatchRegex)
+        ]
+
+        return this.categoryTexts
+
+        const filterCategoryInfo = new 
+    }
+
+    async getResultCategory() {
+        
+    }
+
+
+
+
+
+
+
+
+    // async checkSearchResultsCategoriesArePresent() {
+    //     let searchResultsCategory = await this.getElement(this.bySearchResults1All)
+    //     if (searchResultsField.includes()bySearchResultsLeftMenuCategory.string) {
+    //         await this.verifyElementExists(this.)
+    //         return true
+    //     }
+    //     else {
+    //         return false
+    //     }
+    // }
+
 
 } // End Of Export (class: FtfMainPageObject)
