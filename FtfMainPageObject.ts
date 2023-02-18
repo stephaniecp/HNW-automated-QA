@@ -63,52 +63,43 @@ export class FtfMainPageObject extends BasePage {
 
 
 
-
     async getFilterCategoryInfo() {
-        // Left filter menu elements
-        let searchFilterCategoryName = await this.getElement(this.bySearchLeftCategory)
-        let searchFilterCategoryCount = await this.getElement(this.bySearchLeftCategoryCount)
-        let searchFilterInvalidState = await this.getElement(this.bySearchLeftInvalid)
-        // Right search results field elements
-        let searchResultsAll = await this.getElement(this.bySearchResults1All)
-        let searchResultTypeContainer = await this.getElement(this.bySearchResult2Type)
-        let searchResultTypeName = await this.getElement(this.bySearchResult3TypeName)
-        let searchResultTypeListItem = await this.getElement(this.bySearchResults4TypeList)
 
-        const nameMatchRegex = new RegExp("([^\(\)]+)");
-        const numberMatchRegex = new RegExp("(\\d+)"); 
+        let arrayCategoryFilterInfos = []
 
-        const categoryTexts = [
-           return this.searchFilterCategoryName(this.nameMatchRegex)
-           return this.searchFilterCategoryCount(this.numberMatchRegex)
-        ]
+        async filterCategoryInfos () {
+            // Left filter menu elements
+            let searchFilterCategoryName = await this.getElement(this.bySearchLeftCategory)
+            let searchFilterCategoryCount = await this.getElement(this.bySearchLeftCategoryCount)
+            let searchFilterInvalidState = await this.getElement(this.bySearchLeftInvalid)
+            const nameMatchRegex = new RegExp("([^\(\)]+)");
+            const numberMatchRegex = new RegExp("(\\d+)");
+            // Right search results field elements
+            let searchResultsAll = await this.getElement(this.bySearchResults1All)
+            let searchResultTypeContainer = await this.getElement(this.bySearchResult2Type)
+            let searchResultTypeName = await this.getElement(this.bySearchResult3TypeName)
+            let searchResultTypeListItem = await this.getElement(this.bySearchResults4TypeList)
 
-        return this.categoryTexts
+            export class CategoryFilterInfo extends BasePage {
+                constructor(){
+                    super({name: string, resultCount: number, ifEnabled: boolean})
+                    this.name = name
+                    this.resultCount = resultCount
+                    this.ifEnabled = ifEnabled
+                }
+            }
 
-        const filterCategoryInfo = new 
-    }
+            for ()
+            this.name = nameMatchRegex.exec(searchFilterCategoryName)
+            this.resultCount = numberMatchRegex.exec(searchFilterCategoryCount)
+            this.ifEnabled = searchFilterInvalidState
+        }
+    } 
 
     async getResultCategory() {
-        
     }
 
 
-
-
-
-
-
-
-    // async checkSearchResultsCategoriesArePresent() {
-    //     let searchResultsCategory = await this.getElement(this.bySearchResults1All)
-    //     if (searchResultsField.includes()bySearchResultsLeftMenuCategory.string) {
-    //         await this.verifyElementExists(this.)
-    //         return true
-    //     }
-    //     else {
-    //         return false
-    //     }
-    // }
 
 
 } // End Of Export (class: FtfMainPageObject)
