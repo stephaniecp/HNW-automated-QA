@@ -1,6 +1,6 @@
 import {By, WebElement, until, Origin, Button} from 'selenium-webdriver'
 import {BasePage} from '../basePage'
-import {getFilterCategoryInfosFromWebElements} from './SearchResultsHelpers'
+import {getFilterCategoryInfosFromWebElements, getFilterCategoryCountTotal, getResultsCount} from './SearchResultsHelpers'
 const fs= require('fs') // File System 
 
 export class FtfMainPageObject extends BasePage {
@@ -19,7 +19,8 @@ export class FtfMainPageObject extends BasePage {
     byHomeAddressSearchCta: By = By.xpath("//input[@value='START YOUR SEARCH »']")
 
     // Program search results page
-    bySearchResults1All: By = By.xpath("//input[@class='results']")
+    bySearchResults1All: By = By.xpath("//dev[@class='results']") // verified
+    bySearchResults1Count: By = By.xpath("//span[@class='results-count']") // verified
     bySearchResult2Type: By = By.xpath("//input[@class='result']")
     bySearchResult3TypeName: By = By.xpath("//input[@class='result-program-type']")
     bySearchResults4TypeList: By = By.xpath("//input[@class='result-program']")
@@ -67,7 +68,17 @@ export class FtfMainPageObject extends BasePage {
         let filterCategoryInfos = await getFilterCategoryInfosFromWebElements(filterWebElements)
         console.log(`Length of filterCategoryInfos is: ${filterCategoryInfos.length}`) 
         // Summarize info about results
+        let searchResults1CountElement = await this.getElement(this.bySearchResults1Count)
+        let searchResults1Count = await getResultsCount(searchResults1CountElement) 
+        console.log (`Results count found is: ${searchResults1Count}`)
+        let filterCategoryCountTotal = await getFilterCategoryCountTotal(filterCategoryInfos)
+        console.log (`Results count combining all categories found is: ${filterCategoryCountTotal}`)
+        if (filterCategoryCountTotal != searchResults1Count) {
+            console.error ("Results count does not match filter count")
+            return false
+        }
         // Compare filters with results
+        
         // Compare results with filters
         return true
     }

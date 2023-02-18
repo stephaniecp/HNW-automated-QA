@@ -34,10 +34,13 @@ describe("2- Can search based on address", () => {
 // })
 
 describe.only("4- High level check that search results are valid", () => {
-    test("4.0 - ___", async() => {
+    test("4.0 - Verify filters", async() => {
         await ftfMainPageObject.navigate()
         await ftfMainPageObject.searchWithAddressFromHome('104 S WC Riles Dr, Flagstaff, AZ 86001')
         await ftfMainPageObject.areResultsValid()
+    }) 
+    test("4.0 - Verify results", async() => {
+        expect(await ftfMainPageObject.areResultsValid()).toBe(true)
     }) 
 })
 

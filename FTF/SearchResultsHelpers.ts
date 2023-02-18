@@ -4,9 +4,9 @@ const fs= require('fs') // File System
 
 // 2-18-2023 Progress (start) ------------------------------------------------------------------------
  export class CategoryFilterInfo {
-    name: String;
-    resultCount: Number
-    isEnabled: Boolean
+    name: string;
+    resultCount: number
+    isEnabled: boolean
 
     constructor(name: string, resultCount: number, isEnabled: boolean){
         this.name = name
@@ -28,7 +28,6 @@ export async function getFilterCategoryInfosFromWebElements(filterWebElements: W
             const numberMatchRegex = new RegExp("(\\d+)");
             let regExResultArray = numberMatchRegex.exec(resultCountString)
             if(regExResultArray !== null) {
-
                 resultCount = parseInt(regExResultArray[1])
             }
         }
@@ -42,7 +41,25 @@ export async function getFilterCategoryInfosFromWebElements(filterWebElements: W
     return filterCategoryInfos
 } 
 
-export async function getResultCategory() {
+export async function getFilterCategoryCountTotal(filterCategoryInfos: CategoryFilterInfo[]): Promise<number> {
+    let total = 0
+    for (let i = 0; i < filterCategoryInfos.length; i++) {
+        total += filterCategoryInfos[i].resultCount
+    }
+    return total
+}
+
+export async function getResultsCount(searchResults1All: WebElement): Promise<number> {
+    let searchResults1AllText = await searchResults1All.getText()
+    const numberMatchRegex = new RegExp("(\\d+)");
+    let regExResultArray = numberMatchRegex.exec(searchResults1AllText)
+    if(regExResultArray !== null) {
+        return parseInt(regExResultArray[1])
+    }
+    return 0
+}
+
+export async function getResultCategoryInfosFromWebElements() {
 }
 
 // 2-18-2023 Progress (end) ------------------------------------------------------------------------
