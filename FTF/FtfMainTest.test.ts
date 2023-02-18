@@ -3,15 +3,7 @@ import { SearchSource } from 'jest'
 import { Actions } from 'selenium-webdriver'
 import {FtfMainPageObject} from './ftfMainPageObject'
 const ftfMainPageObject = new FtfMainPageObject()
-
-
-const filterCategoryInfo = new FilterCategoryInfo() // 2/16/23 added
-
-
-
-
-
-
+// Test single test by using describe/only / or skip with describe.skip
 
 beforeAll(async () => {
   await ftfMainPageObject.navigate()
@@ -40,6 +32,14 @@ describe("2- Can search based on address", () => {
 //         console.log ("(3) Done")
 //     }) 
 // })
+
+describe.only("4- High level check that search results are valid", () => {
+    test("4.0 - ___", async() => {
+        await ftfMainPageObject.navigate()
+        await ftfMainPageObject.searchWithAddressFromHome('104 S WC Riles Dr, Flagstaff, AZ 86001')
+        await ftfMainPageObject.areResultsValid()
+    }) 
+})
 
 
 // afterAll(async () => {

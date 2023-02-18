@@ -1,5 +1,5 @@
 import {By, WebElement, until, Origin, Button} from 'selenium-webdriver'
-import {BasePage} from './basePage'
+import {BasePage} from '../basePage'
 const fs= require('fs')  //  (Built in from Node) Added for the screenshot/.txt tests per Unit 2.8 example https://github.com/MarohnHoward/qrpt9InClassExamples/blob/main/unit2.8/googleWBaseTest.test.ts
 
 export class GamerDaysPageObject extends BasePage {

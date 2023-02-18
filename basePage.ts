@@ -1,6 +1,6 @@
 import {Builder, By, Capabilities, until, WebDriver, WebElement, Actions, Button} from "selenium-webdriver";
-import { GamerDaysPageObject } from "./gamerDaysPageObject";
-import { FtfMainPageObject } from "./FtfMainPageObject";
+import { GamerDaysPageObject } from "./Gamer Days/gamerDaysPageObject";
+import { FtfMainPageObject } from "./FTF/FtfMainPageObject";
 const fs= require('fs')
 //const chromedriver = require("chromedriver")
 import { CustomConsole, LogType, LogMessage } from '@jest/console';

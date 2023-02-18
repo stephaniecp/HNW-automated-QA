@@ -1,5 +1,5 @@
 import {By, WebElement, until, Origin, Button} from 'selenium-webdriver'
-import {BasePage} from './basePage'
+import {BasePage} from '../basePage'
 const fs= require('fs') // File System 
 
 export class FtfMainPageObject extends BasePage {
