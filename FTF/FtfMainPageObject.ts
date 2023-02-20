@@ -19,11 +19,11 @@ export class FtfMainPageObject extends BasePage {
     byHomeAddressSearchCta: By = By.xpath("//input[@value='START YOUR SEARCH »']")
 
     // Program search results page
-    bySearchResults1All: By = By.xpath("//dev[@class='results']") // verified
+    bySearchResults1All: By = By.xpath("//div[@class='results']") // verified
     bySearchResults1Count: By = By.xpath("//span[@class='results-count']") // verified
-    bySearchResult2Type: By = By.xpath("//input[@class='result']")
-    bySearchResult3TypeName: By = By.xpath("//input[@class='result-program-type']")
-    bySearchResults4TypeList: By = By.xpath("//input[@class='result-program']")
+    bySearchResult2Type: By = By.xpath("//section[@class='result']") // verified
+    bySearchResult3TypeName: By = By.xpath("//div[@class='result-program-type']") // verified
+    bySearchResults4TypeList: By = By.xpath("//div[@class='result-program']") // verified
     bySearchLeftAllLiCombined: By = By.xpath("//div[@class='filter-results-by-program']/ul/li")    // new 2/18/23
     bySearchLeftCategory: By = By.xpath("//input[@class='term-name']")
     bySearchLeftCategoryCount: By = By.xpath("//input[@class='term-count']")
@@ -78,7 +78,7 @@ export class FtfMainPageObject extends BasePage {
             return false
         }
         // Compare filters with results
-        
+
         // Compare results with filters
         return true
     }
