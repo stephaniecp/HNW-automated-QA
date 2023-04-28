@@ -71,7 +71,7 @@ export class CategoryResultsInfo {
     }
 }
 
-export async function getResultCategoryInfosFromWebElements(resultsWebElements: WebElement[]): Promise<CategoryFilterInfo[]> {
+export async function getResultCategoryInfosFromWebElements(resultsWebElements: WebElement[]): Promise<CategoryResultsInfo[]> {
     let resultCategoryInfos: CategoryResultsInfo[] = []
     for (let i = 0; i < resultsWebElements.length; i++) {
         console.log(`Started processing results category info$ ${i}`) 
@@ -94,7 +94,7 @@ export async function getResultCategoryInfosFromWebElements(resultsWebElements: 
         console.log("Finished processing filter category info")
 
     }
-    return filterCategoryInfos
+    return resultCategoryInfos
 }
 
 // 2-18-2023 Progress (end) ------------------------------------------------------------------------
