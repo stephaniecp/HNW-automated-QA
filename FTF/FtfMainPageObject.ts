@@ -14,9 +14,14 @@ export class FtfMainPageObject extends BasePage {
     WhatWedDoFormCheckParenting: By = By.xpath("//input[@id='interests-2']")
     WhatWedDoFormCheckNotifications: By = By.xpath("//input[@id='interests-3']")
     WhatWedDoFormCheckInformtion: By = By.xpath("//input[@id='interests-4']")
+
     //Home
-    byHomeAddressField: By = By.xpath("//input[@placeholder='ENTER YOUR ADDRESS']")
-    byHomeAddressSearchCta: By = By.xpath("//input[@value='START YOUR SEARCH »']")
+    // Attempt at fixing selectors for TC 2.0
+    byHomeAddressField: By = By.xpath("//input[@lass='address pac-target-input']")
+    byHomeAddressSearchCta: By = By.xpath("//input[@lass='find-services-submit']")
+    // // BAK (duplicated) old selectors below
+    // byHomeAddressField: By = By.xpath("//input[@placeholder='ENTER YOUR ADDRESS']")
+    // byHomeAddressSearchCta: By = By.xpath("//input[@value='START YOUR SEARCH »']")
 
     // Program search results page
     bySearchResults1All: By = By.xpath("//div[@class='results']") // verified
@@ -36,22 +41,38 @@ export class FtfMainPageObject extends BasePage {
     }
 
 // Custom Methods Below
-    homeAddressField: By = By.xpath("//input[@placeholder='ENTER YOUR ADDRESS']")
-    homeAddressSearchCta: By = By.xpath("//input[@value='START YOUR SEARCH »']")
+
+    // //BAK
+    // homeAddressField: By = By.xpath("//input[@placeholder='ENTER YOUR ADDRESS']")
+    // homeAddressSearchCta: By = By.xpath("//input[@value='START YOUR SEARCH »']")
     async searchWithAddressFromHome(searchAddress: string) {
         console.log ("(2.0.0) Trying to initiate search (with address)")
+
+        // Can be deleted
         // let elementHomeAddressSearchCta = await this.getElement(this.homeAddressSearchCta) 
-        await this.driver.sleep(500)
-        await this.clickSpecial(this.homeAddressField)
-        await this.setInput(this.homeAddressField, `${searchAddress}\n`)
+
+        await this.driver.sleep(500) 
+        //BAK
+        // await this.setInput(this.homeAddressField, `${searchAddress}\n`)
+
+        await this.setInput(this.byHomeAddressField, `${searchAddress}\n`)
+        console.log ("(2.0.1) Clicked Home address field")
+        //BAK
+        // await this.clickSpecial(this.homeAddressSearchCta)
+
+        await this.clickSpecial(this.byHomeAddressSearchCta)
+        console.log ("(2.0.2) Clicked search CTA")
+
         await this.driver.sleep(1500)
         console.log ("(2.0.3) Clicked to submit / initiate search")
     } 
 
-    async navigateToStayUpToDateForm() {
-        await this.clickSpecial(this.byNavAboutFtf)
-        await this.clickSpecial(this.byNavAboutFtfWhatWeDo)
-    }
+    // // Commenting incomplete method out
+    // async  () {
+    //     await this.clickSpecial(this.byNavAboutFtf)
+    //     await this.clickSpecial(this.byNavAboutFtfWhatWeDo)
+    // }
+
     async hardCodedStayUpToDateFormFilling() {
         //await this.clickSpecial(this.WhatWedDoFormFirstName)
         //await this.clickSpecial(this.WhatWedDoFormLastName)
