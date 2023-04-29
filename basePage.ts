@@ -62,6 +62,7 @@ export class BasePage {
         try {
             console.log(`clickSpecial phase=start by=${elementBy.toString()}`)
             let targetElement = await this.getElement(elementBy, true) ;
+            await this.scrollIntoViewJs(targetElement)
             try {
                 await targetElement.click()
                 console.log(`clickSpecial phase=normalClickWorked`)
@@ -73,7 +74,7 @@ export class BasePage {
 
             console.log(`clickSpecial element found by:${elementBy.toString()} isDisplayed:${await targetElement.isDisplayed()}`)
             await this.describeElement(targetElement, elementBy)
-            await this.scrollIntoViewJs(targetElement)
+            await this.scrollIntoViewJs(targetElement) // duplicate line
             console.log(`clickSpecial did a js scroll`)
             await this.moveToElementAndWiggle(targetElement, 50)
             console.log(`clickSpecial did a little dance`)

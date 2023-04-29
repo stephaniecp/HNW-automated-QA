@@ -1,7 +1,7 @@
 import {expect, jest, test} from '@jest/globals'
 import { SearchSource } from 'jest'
 import { Actions } from 'selenium-webdriver'
-import {FtfMainPageObject} from './ftfMainPageObject'
+import {FtfMainPageObject} from './FtfMainPageObject'
 const ftfMainPageObject = new FtfMainPageObject()
 // Test single test by using describe/only / or skip with describe.skip
 // Run test file in console: npx jest Ftf

@@ -5,6 +5,7 @@ const fs= require('fs') // File System
 
 export class FtfMainPageObject extends BasePage {
 // Locators Below
+    // "What we do" form
     byNavAboutFtf: By = By.xpath("//a[@href='javascript:;'][normalize-space()='About FTF']")
     byNavAboutFtfWhatWeDo: By = By.xpath("//li[@id='menu-item-1213']//a[normalize-space()='What We Do']")
     WhatWedDoFormFirstName: By = By.xpath("//input[@placeholder='First Name']")
@@ -14,18 +15,9 @@ export class FtfMainPageObject extends BasePage {
     WhatWedDoFormCheckParenting: By = By.xpath("//input[@id='interests-2']")
     WhatWedDoFormCheckNotifications: By = By.xpath("//input[@id='interests-3']")
     WhatWedDoFormCheckInformtion: By = By.xpath("//input[@id='interests-4']")
-
-    //Home
-
-    // // Attempt at fixing selectors for TC 2.0
-    // byHomeAddressField: By = By.xpath("//input[@lass='address pac-target-input']")
-    // byHomeAddressSearchCta: By = By.xpath("//input[@lass='find-services-submit']")
-
-    // BAK (duplicated) old selectors below
-    byHomeAddressField: By = By.xpath("//input[@placeholder='ENTER YOUR ADDRESS']")
-    byHomeAddressSearchCta: By = By.xpath("//input[@value='START YOUR SEARCH »']")
-
-
+    // Home
+    homeAddressField: By = By.xpath("//input[@class='address pac-target-input']") // Verified 4/29
+    homeAddressSearchCta: By = By.xpath("//input[@value='START YOUR SEARCH »']") // Obsolete? 
     // Program search results page
     bySearchResults1All: By = By.xpath("//div[@class='results']") // verified
     bySearchResults1Count: By = By.xpath("//span[@class='results-count']") // verified
@@ -37,26 +29,28 @@ export class FtfMainPageObject extends BasePage {
     bySearchLeftCategoryCount: By = By.xpath("//input[@class='term-count']")
     bySearchLeftInvalid: By = By.xpath("//li[@class='invalid']")
     
-
 // Constructor
     constructor(){
         super({url:"https://www.firstthingsfirst.org/"})
     }
 
 // Custom Methods Below
-    homeAddressField: By = By.xpath("//input[@class='address pac-target-input']") // Verified 4/29
-    homeAddressSearchCta: By = By.xpath("//input[@value='START YOUR SEARCH »']") // Obsolete?
     async searchWithAddressFromHome(searchAddress: string) {
         console.log ("(2.0.0) Trying to initiate search (with address)")
         // let elementHomeAddressSearchCta = await this.getElement(this.homeAddressSearchCta) 
+        const addressFieldElement = await this.getElement(this.homeAddressField)
+        console.log (`(2.1.1) ${await this.isElementInViewportJs(addressFieldElement)}`)
+        await this.scrollIntoViewJs(addressFieldElement)
+        console.log (`(2.2.1) ${await this.isElementInViewportJs(addressFieldElement)}`)
+
         await this.driver.sleep(500)
-        console.log ("(2.0.1) ")
+        console.log ("(2.2.2) ")
         await this.moveToElementAndWiggle(await this.getElement(this.homeAddressField))
-        console.log ("(2.0.1 B) ")
+        console.log ("(2.2.3) ")
         await this.clickSpecial(this.homeAddressField)
-        console.log ("(2.0.2) ")
+        console.log ("(2.2.4) ")
         await this.setInput(this.homeAddressField, `${searchAddress}\n`)
-        console.log ("(2.0.3) Clicked to submit / initiate search")
+        console.log ("(2.2.5) Clicked to submit / initiate search")
     } 
 
     // // Commenting incomplete method out
