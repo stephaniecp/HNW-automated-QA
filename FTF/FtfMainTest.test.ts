@@ -8,7 +8,7 @@ const ftfMainPageObject = new FtfMainPageObject()
 
 beforeAll(async () => {
   await ftfMainPageObject.navigate()
-  await ftfMainPageObject.showMouseMovement()
+//   await ftfMainPageObject.showMouseMovement()
   await ftfMainPageObject.driver.manage().window().maximize()
 })
 

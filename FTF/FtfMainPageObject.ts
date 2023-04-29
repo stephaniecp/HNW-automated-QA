@@ -16,12 +16,15 @@ export class FtfMainPageObject extends BasePage {
     WhatWedDoFormCheckInformtion: By = By.xpath("//input[@id='interests-4']")
 
     //Home
-    // Attempt at fixing selectors for TC 2.0
-    byHomeAddressField: By = By.xpath("//input[@lass='address pac-target-input']")
-    byHomeAddressSearchCta: By = By.xpath("//input[@lass='find-services-submit']")
-    // // BAK (duplicated) old selectors below
-    // byHomeAddressField: By = By.xpath("//input[@placeholder='ENTER YOUR ADDRESS']")
-    // byHomeAddressSearchCta: By = By.xpath("//input[@value='START YOUR SEARCH »']")
+
+    // // Attempt at fixing selectors for TC 2.0
+    // byHomeAddressField: By = By.xpath("//input[@lass='address pac-target-input']")
+    // byHomeAddressSearchCta: By = By.xpath("//input[@lass='find-services-submit']")
+
+    // BAK (duplicated) old selectors below
+    byHomeAddressField: By = By.xpath("//input[@placeholder='ENTER YOUR ADDRESS']")
+    byHomeAddressSearchCta: By = By.xpath("//input[@value='START YOUR SEARCH »']")
+
 
     // Program search results page
     bySearchResults1All: By = By.xpath("//div[@class='results']") // verified
@@ -41,29 +44,18 @@ export class FtfMainPageObject extends BasePage {
     }
 
 // Custom Methods Below
-
-    // //BAK
-    // homeAddressField: By = By.xpath("//input[@placeholder='ENTER YOUR ADDRESS']")
-    // homeAddressSearchCta: By = By.xpath("//input[@value='START YOUR SEARCH »']")
+    homeAddressField: By = By.xpath("//input[@class='address pac-target-input']") // Verified 4/29
+    homeAddressSearchCta: By = By.xpath("//input[@value='START YOUR SEARCH »']") // Obsolete?
     async searchWithAddressFromHome(searchAddress: string) {
         console.log ("(2.0.0) Trying to initiate search (with address)")
-
-        // Can be deleted
         // let elementHomeAddressSearchCta = await this.getElement(this.homeAddressSearchCta) 
-
-        await this.driver.sleep(500) 
-        //BAK
-        // await this.setInput(this.homeAddressField, `${searchAddress}\n`)
-
-        await this.setInput(this.byHomeAddressField, `${searchAddress}\n`)
-        console.log ("(2.0.1) Clicked Home address field")
-        //BAK
-        // await this.clickSpecial(this.homeAddressSearchCta)
-
-        await this.clickSpecial(this.byHomeAddressSearchCta)
-        console.log ("(2.0.2) Clicked search CTA")
-
-        await this.driver.sleep(1500)
+        await this.driver.sleep(500)
+        console.log ("(2.0.1) ")
+        await this.moveToElementAndWiggle(await this.getElement(this.homeAddressField))
+        console.log ("(2.0.1 B) ")
+        await this.clickSpecial(this.homeAddressField)
+        console.log ("(2.0.2) ")
+        await this.setInput(this.homeAddressField, `${searchAddress}\n`)
         console.log ("(2.0.3) Clicked to submit / initiate search")
     } 
 
