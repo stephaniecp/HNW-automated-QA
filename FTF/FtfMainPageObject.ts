@@ -35,6 +35,7 @@ export class FtfMainPageObject extends BasePage {
     }
 
 // Custom Methods Below
+    // Test 2.0
     async searchWithAddressFromHome(searchAddress: string) {
         console.log ("(2.0.0) Trying to initiate search (with address)")
         // let elementHomeAddressSearchCta = await this.getElement(this.homeAddressSearchCta) 
@@ -51,24 +52,35 @@ export class FtfMainPageObject extends BasePage {
         console.log ("(2.2.4) ")
         await this.setInput(this.homeAddressField, `${searchAddress}\n`)
         console.log ("(2.2.5) Clicked to submit / initiate search")
-    } 
-
-    // // Commenting incomplete method out
-    // async  () {
-    //     await this.clickSpecial(this.byNavAboutFtf)
-    //     await this.clickSpecial(this.byNavAboutFtfWhatWeDo)
-    // }
-
-    async hardCodedStayUpToDateFormFilling() {
-        //await this.clickSpecial(this.WhatWedDoFormFirstName)
-        //await this.clickSpecial(this.WhatWedDoFormLastName)
-        //await this.clickSpecial(this.WhatWedDoFormEmail)
-        await this.clickSpecial(this.WhatWedDoFormCheckNews)
-        await this.clickSpecial(this.WhatWedDoFormCheckParenting)
-        await this.clickSpecial(this.WhatWedDoFormCheckNotifications)
-        await this.clickSpecial(this.WhatWedDoFormCheckInformtion)
     }
 
+    // Test 3.0
+    async navigateToStayUpToDateForm() {
+        await this.clickSpecial(this.byNavAboutFtf)
+        console.log ("(3.0.0) Clicked Nav > About FTF")
+        await this.clickSpecial(this.byNavAboutFtfWhatWeDo)
+        console.log ("(3.0.1) Clicked `What We Do`")
+    }
+    async hardCodedStayUpToDateFormFilling(testingFormFirstName: string, testingFormLastName: string, testingFormEmail: string) {
+        await this.moveToElementAndWiggle(await this.getElement(this.WhatWedDoFormFirstName))
+        console.log ("(3.1.0) Wiggle to find element")
+        await this.setInput(this.WhatWedDoFormFirstName, `${testingFormFirstName}`)
+        console.log ("(3.1.0) First name")
+        await this.setInput(this.WhatWedDoFormLastName, `${testingFormLastName}`)
+        console.log ("(3.1.1) Last name")
+        await this.setInput(this.WhatWedDoFormEmail, `${testingFormEmail}`)
+        console.log ("(3.1.2) Email")
+        await this.clickSpecial(this.WhatWedDoFormCheckNews)
+        console.log ("(3.1.3) Checkbox 1")
+        await this.clickSpecial(this.WhatWedDoFormCheckParenting)
+        console.log ("(3.1.4) Checkbox 2")
+        await this.clickSpecial(this.WhatWedDoFormCheckNotifications)
+        console.log ("(3.1.5) Checkbox 3")
+        await this.clickSpecial(this.WhatWedDoFormCheckInformtion)
+        console.log ("(3.1.6) Checkbox 4")
+    }
+
+    // Test 4.0
     async areResultsValid(){
         // Summarize info about filters
         let filterWebElements = await this.getElements(this.bySearchLeftAllLiCombined)
