@@ -173,7 +173,8 @@ export class BasePage {
     }
 
     async moveToElementAndWiggle(toElement: WebElement, moveDuration = 50): Promise<void> {
-        console.log(`moveToElementAndWiggle phase=Start`)
+        console.log(`moveToElementAndWiggle phase=Start isElementInViewPort=${await this.isElementInViewportJs(toElement)}`)
+        await this.scrollIntoViewJs(toElement)
         await this.driver.actions().clear()
         let actions = this.driver.actions()
         actions = this.actionWiggle(actions, toElement, moveDuration)

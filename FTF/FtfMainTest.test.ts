@@ -23,7 +23,7 @@ describe.only("2- Can search based on address", () => {
     test("2.0 - ___", async() => {
         await ftfMainPageObject.searchWithAddressFromHome('104 S WC Riles Dr, Flagstaff, AZ 86001')
     }) 
-}) // Failing 4/28/23
+}) // Verfied and passing - 4/29/23
 
 // // Commenting becuse imcomplete method leads to test file failing
 // describe.("3- Fill form to stay up to date (no submiting) - Clicks / Form entry", () => {
