@@ -32,13 +32,16 @@ export class BasePage {
         //this.driver = new Builder().withCapabilities(Capabilities.firefox()).build()
         if(options && options.url) this.url = options.url
     }
-    async navigate(url?: string): Promise<void> {
-        if (url) return await this.driver.get(url);
-        else if (this.url) return await this.driver.get(this.url)
-        else
-        return Promise.reject(
-            "BasePage.navigate() needs a url defined on the page objects, or one passed in."
-        )
+
+    async navigate(url?: string, afterLoadDelayMs: number=2000): Promise<void> {
+        var gotoUrl = (url) ? url : this.url;
+        if (!gotoUrl) return Promise.reject("BasePage.navigate() needs a url defined on the page objects, or one passed in.")
+        await this.driver.get(gotoUrl);
+        if (afterLoadDelayMs > 0) {
+            console.log(`navigate phase=afterLoadDelay`)
+            await this.driver.sleep(afterLoadDelayMs)
+        }
+        await this.showMouseMovement();
     }
 
     async getElement(elementBy: By, debug:Boolean=false): Promise<WebElement> {
@@ -198,31 +201,57 @@ export class BasePage {
     * Some debug code inspired by:
     * https://stackoverflow.com/a/52669454
     */
-     async showMouseMovement() {
-        const jsCode = `
-        function enableCursor() {
-            var seleniumFollowerImg = document.createElement('img');
-            seleniumFollowerImg.setAttribute('src', 'data:image/png;base64,'
-            + 'iVBORw0KGgoAAAANSUhEUgAAABQAAAAeCAQAAACGG/bgAAAAAmJLR0QA/4ePzL8AAAAJcEhZcwAA'
-            + 'HsYAAB7GAZEt8iwAAAAHdElNRQfgAwgMIwdxU/i7AAABZklEQVQ4y43TsU4UURSH8W+XmYwkS2I0'
-            + '9CRKpKGhsvIJjG9giQmliHFZlkUIGnEF7KTiCagpsYHWhoTQaiUUxLixYZb5KAAZZhbunu7O/PKf'
-            + 'e+fcA+/pqwb4DuximEqXhT4iI8dMpBWEsWsuGYdpZFttiLSSgTvhZ1W/SvfO1CvYdV1kPghV68a3'
-            + '0zzUWZH5pBqEui7dnqlFmLoq0gxC1XfGZdoLal2kea8ahLoqKXNAJQBT2yJzwUTVt0bS6ANqy1ga'
-            + 'VCEq/oVTtjji4hQVhhnlYBH4WIJV9vlkXLm+10R8oJb79Jl1j9UdazJRGpkrmNkSF9SOz2T71s7M'
-            + 'SIfD2lmmfjGSRz3hK8l4w1P+bah/HJLN0sys2JSMZQB+jKo6KSc8vLlLn5ikzF4268Wg2+pPOWW6'
-            + 'ONcpr3PrXy9VfS473M/D7H+TLmrqsXtOGctvxvMv2oVNP+Av0uHbzbxyJaywyUjx8TlnPY2YxqkD'
-            + 'dAAAAABJRU5ErkJggg==');
-            seleniumFollowerImg.setAttribute('id', 'selenium_mouse_follower');
-            seleniumFollowerImg.setAttribute('style', 'position: absolute; z-index: 9999999; pointer-events: none; left:0; top:0; width: 17px; height: 20px;');
-            document.body.appendChild(seleniumFollowerImg);
-            document.onmousemove = function (e) {
-                document.getElementById('selenium_mouse_follower').style.left = e.pageX + 'px';
-                document.getElementById('selenium_mouse_follower').style.top = e.pageY + 'px';
-            };
-        };
-        enableCursor();        
-        `
-        await this.driver.executeScript(jsCode);
+    async showMouseMovement() {
+        try {
+            console.log(`showMouseMovement phase=preppingJs`)
+            const jsCode = `
+            document.addEventListener('DOMContentLoaded', function () {
+                setTimeout(async () => {
+                    console.log('showMouseMovement phase=start');
+                    async function enableCursor() {
+                        console.log("enableCursor phase=running");
+                        var seleniumFollowerImg = await document.createElement('img');
+                        await seleniumFollowerImg.setAttribute('src', 'data:image/png;base64,'
+                        + 'iVBORw0KGgoAAAANSUhEUgAAABQAAAAeCAQAAACGG/bgAAAAAmJLR0QA/4ePzL8AAAAJcEhZcwAA'
+                        + 'HsYAAB7GAZEt8iwAAAAHdElNRQfgAwgMIwdxU/i7AAABZklEQVQ4y43TsU4UURSH8W+XmYwkS2I0'
+                        + '9CRKpKGhsvIJjG9giQmliHFZlkUIGnEF7KTiCagpsYHWhoTQaiUUxLixYZb5KAAZZhbunu7O/PKf'
+                        + 'e+fcA+/pqwb4DuximEqXhT4iI8dMpBWEsWsuGYdpZFttiLSSgTvhZ1W/SvfO1CvYdV1kPghV68a3'
+                        + '0zzUWZH5pBqEui7dnqlFmLoq0gxC1XfGZdoLal2kea8ahLoqKXNAJQBT2yJzwUTVt0bS6ANqy1ga'
+                        + 'VCEq/oVTtjji4hQVhhnlYBH4WIJV9vlkXLm+10R8oJb79Jl1j9UdazJRGpkrmNkSF9SOz2T71s7M'
+                        + 'SIfD2lmmfjGSRz3hK8l4w1P+bah/HJLN0sys2JSMZQB+jKo6KSc8vLlLn5ikzF4268Wg2+pPOWW6'
+                        + 'ONcpr3PrXy9VfS473M/D7H+TLmrqsXtOGctvxvMv2oVNP+Av0uHbzbxyJaywyUjx8TlnPY2YxqkD'
+                        + 'dAAAAABJRU5ErkJggg==');
+                        await seleniumFollowerImg.setAttribute('id', 'selenium_mouse_follower');
+                        await seleniumFollowerImg.setAttribute('style', 'position: absolute; z-index: 999999; pointer-events: none; left:0; top:0; width: 17px; height: 20px;');
+                        
+                        var targetParentElement = document.getElementsByTagName("main");
+                        if (targetParentElement && targetParentElement.length > 0) {
+                            targetParentElement = targetParentElement[0];
+                        } else {
+                            targetParentElement = document.body;
+                        }
+                        targetParentElement.appendChild(seleniumFollowerImg);
+                        var mouseMoveCapture = function (e) {
+                            console.log("mouse move...")
+                            var mouseFollowerElement = document.getElementById('selenium_mouse_follower')
+                            mouseFollowerElement.style.left = e.pageX + 'px';
+                            mouseFollowerElement.style.top = e.pageY + 'px';
+                            // console.log("mouse move done...", mouseFollowerElement, e.pageX, e.pageY)
+                        };
+                        document.addEventListener("mousemove", mouseMoveCapture)
+                    }
+                    // console.log('showMouseMovement phase=functionReady');
+                    enableCursor();
+                    console.log('showMouseMovement phase=complete');    
+                }, 1000);
+            }, false);
+            `
+            await this.driver.executeScript(jsCode);    
+            console.log("showMouseMovement phase=done")
+        } catch (err){
+            console.error(`showMouseMovement phase=error`,err);
+            throw err;
+        }
     }
 
     async getElements(elementBy: By): Promise<WebElement[]> {
@@ -264,12 +293,14 @@ export class BasePage {
         return await this.driver.executeScript("alert(arguments[0])", message)
     }
 
-    async gentleBrowserClose(delayS:number=2){
+   async gentleBrowserClose(delayS:number=2){
         if (delayS > 0) {
             await this.alertJs(`Closing browser in ${delayS} seconds`)
             await this.driver.sleep(delayS * 1000)
         }
-        await this.driver.quit()
+        if (delayS >= 0){
+            await this.driver.quit()
+        }
     }
 
 
