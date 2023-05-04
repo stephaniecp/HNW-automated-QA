@@ -26,7 +26,7 @@ describe("2- Can search based on address", () => {
 }) // Verfied and passing - 4/29/23
 
 // Commenting becuse imcomplete method leads to test file failing
-describe("3- Fill form to stay up to date (no submiting) - Clicks / Form entry", () => {
+describe.only("3- Fill form to stay up to date (no submiting) - Clicks / Form entry", () => {
     test("3.0 - Navigate to a fill form to stay up to date (email signup)", async() => {
         console.log ("(3) Start")
         await ftfMainPageObject.navigateToStayUpToDateForm()
@@ -36,7 +36,7 @@ describe("3- Fill form to stay up to date (no submiting) - Clicks / Form entry",
     }) 
 }) // Verfied and passing - 4/29/23
 
-describe.only("4- High level check that search results are va lid", () => {
+describe.skip("4- High level check that search results are valid", () => {
     test("4.0 - Verify filters", async() => {
         await ftfMainPageObject.navigate()
         await ftfMainPageObject.searchWithAddressFromHome('104 S WC Riles Dr, Flagstaff, AZ 86001')

@@ -8,16 +8,16 @@ export class FtfMainPageObject extends BasePage {
     // "What we do" form
     byNavAboutFtf: By = By.xpath("//a[@href='javascript:;'][normalize-space()='About FTF']")
     byNavAboutFtfWhatWeDo: By = By.xpath("//li[@id='menu-item-1213']//a[normalize-space()='What We Do']")
-    WhatWedDoFormFirstName: By = By.xpath("//input[@placeholder='First Name']")
-    WhatWedDoFormLastName: By = By.xpath("//input[@placeholder='Last Name']")
-    WhatWedDoFormEmail: By = By.xpath("//input[@placeholder='Your email address']")
-    WhatWedDoFormCheckNews: By = By.xpath("//input[@id='interests-1']")
-    WhatWedDoFormCheckParenting: By = By.xpath("//input[@id='interests-2']")
-    WhatWedDoFormCheckNotifications: By = By.xpath("//input[@id='interests-3']")
-    WhatWedDoFormCheckInformtion: By = By.xpath("//input[@id='interests-4']")
+    byWhatWeDoFormFirstName: By = By.xpath("//input[@placeholder='First Name']")
+    byWhatWeDoFormLastName: By = By.xpath("//input[@placeholder='Last Name']")
+    byWhatWeDoFormEmail: By = By.xpath("//input[@placeholder='Your email address']")
+    byWhatWeDoFormCheckNews: By = By.xpath("//input[@id='interests-1']")
+    byWhatWeDoFormCheckParenting: By = By.xpath("//input[@id='interests-2']")
+    byWha2tWeDoFormCheckNotifications: By = By.xpath("//input[@id='interests-3']")
+    byWhatWeDoFormCheckInformtion: By = By.xpath("//input[@id='interests-4']")
     // Home
-    homeAddressField: By = By.xpath("//input[@class='address pac-target-input']") // Verified 4/29
-    homeAddressSearchCta: By = By.xpath("//input[@value='START YOUR SEARCH »']") // Obsolete? 
+    byHomeAddressField: By = By.xpath("//input[@class='address pac-target-input']") // Verified 4/29
+    byHomeAddressSearchCta: By = By.xpath("//input[@value='START YOUR SEARCH »']") // Obsolete? 
     // Program search results page
     bySearchResults1All: By = By.xpath("//div[@class='results']") // verified
     bySearchResults1Count: By = By.xpath("//span[@class='results-count']") // verified
@@ -39,18 +39,18 @@ export class FtfMainPageObject extends BasePage {
     async searchWithAddressFromHome(searchAddress: string) {
         console.log ("(2.0.0) Trying to initiate search (with address)")
         // let elementHomeAddressSearchCta = await this.getElement(this.homeAddressSearchCta) 
-        const addressFieldElement = await this.getElement(this.homeAddressField)
+        const addressFieldElement = await this.getElement(this.byHomeAddressField)
         console.log (`(2.1.1) ${await this.isElementInViewportJs(addressFieldElement)}`)
         await this.scrollIntoViewJs(addressFieldElement)
         console.log (`(2.2.1) ${await this.isElementInViewportJs(addressFieldElement)}`)
 
         await this.driver.sleep(500)
         console.log ("(2.2.2) ")
-        await this.moveToElementAndWiggle(await this.getElement(this.homeAddressField))
+        await this.moveToElementAndWiggle(await this.getElement(this.byHomeAddressField))
         console.log ("(2.2.3) ")
-        await this.clickSpecial(this.homeAddressField)
+        await this.clickSpecial(this.byHomeAddressField)
         console.log ("(2.2.4) ")
-        await this.setInput(this.homeAddressField, `${searchAddress}\n`)
+        await this.setInput(this.byHomeAddressField, `${searchAddress}\n`)
         console.log ("(2.2.5) Clicked to submit / initiate search")
     }
 
@@ -62,21 +62,21 @@ export class FtfMainPageObject extends BasePage {
         console.log ("(3.0.1) Clicked `What We Do`")
     }
     async hardCodedStayUpToDateFormFilling(testingFormFirstName: string, testingFormLastName: string, testingFormEmail: string) {
-        await this.moveToElementAndWiggle(await this.getElement(this.WhatWedDoFormFirstName))
+        await this.moveToElementAndWiggle(await this.getElement(this.byWhatWeDoFormFirstName))
         console.log ("(3.1.0) Wiggle to find element")
-        await this.setInput(this.WhatWedDoFormFirstName, `${testingFormFirstName}`)
+        await this.setInput(this.byWhatWeDoFormFirstName, `${testingFormFirstName}`)
         console.log ("(3.1.0) First name")
-        await this.setInput(this.WhatWedDoFormLastName, `${testingFormLastName}`)
+        await this.setInput(this.byWhatWeDoFormLastName, `${testingFormLastName}`)
         console.log ("(3.1.1) Last name")
-        await this.setInput(this.WhatWedDoFormEmail, `${testingFormEmail}`)
+        await this.setInput(this.byWhatWeDoFormEmail, `${testingFormEmail}`)
         console.log ("(3.1.2) Email")
-        await this.clickSpecial(this.WhatWedDoFormCheckNews)
+        await this.clickSpecial(this.byWhatWeDoFormCheckNews)
         console.log ("(3.1.3) Checkbox 1")
-        await this.clickSpecial(this.WhatWedDoFormCheckParenting)
+        await this.clickSpecial(this.byWhatWeDoFormCheckParenting)
         console.log ("(3.1.4) Checkbox 2")
-        await this.clickSpecial(this.WhatWedDoFormCheckNotifications)
+        await this.clickSpecial(this.byWha2tWeDoFormCheckNotifications)
         console.log ("(3.1.5) Checkbox 3")
-        await this.clickSpecial(this.WhatWedDoFormCheckInformtion)
+        await this.clickSpecial(this.byWhatWeDoFormCheckInformtion)
         console.log ("(3.1.6) Checkbox 4")
     }
 
